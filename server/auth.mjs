@@ -17,7 +17,7 @@ function parseCookies(header = '') {
 }
 
 function configured(env) {
-  return env.NODE_ENV === 'production' || env.AUTH_REQUIRED === 'true'
+  return env.AUTH_REQUIRED === 'true'
 }
 
 function sessionCookieName(env) {
@@ -161,4 +161,3 @@ export function createAuth(env = process.env) {
     },
   }
 }
-
