@@ -40,17 +40,28 @@ app.post('/api/cases/:id/investigate', async (req, res) => {
   const item = caseStore.find((candidate) => candidate.id === req.params.id)
   if (!item) return res.status(404).json({ error: 'Case not found' })
   try {
-    const graphContext = await fetchCaseContext(item.transactionId)
+    let graphContext = null
+    let graphContextWarning = ''
+    try {
+      graphContext = await fetchCaseContext(item.transactionId)
+    } catch (error) {
+      graphContextWarning = error instanceof Error ? error.message : 'TigerGraph context was unavailable'
+    }
     const run = await createAgenticRun(item)
     const answer = item.answer ? structuredClone(item.answer) : null
-    const graphWriteback = answer ? await writeInvestigationCase(answer, item.transactionId, { cardId: item.account }) : null
+    let graphWriteback = null
+    try {
+      graphWriteback = answer ? await writeInvestigationCase(answer, item.transactionId, { cardId: item.account }) : null
+    } catch (error) {
+      graphContextWarning ||= error instanceof Error ? error.message : 'TigerGraph writeback was unavailable'
+    }
     if (graphWriteback) {
       answer.case.written_to_graph = true
       answer.case.graph_case_id = graphWriteback.graphCaseId
     }
     const entry = { id: `AUD-${Date.now()}`, time: new Date().toISOString(), actor: 'GraphSentinel agent', event: 'Investigation completed', detail: run.analysis.recommendation.action }
     auditStore.set(item.id, [entry, ...(auditStore.get(item.id) || [])])
-    res.json({ ...run, answer, graphContext, graphWriteback, graphMode: tigerGraphStatus().mode })
+    res.json({ ...run, answer, graphContext, graphContextWarning, graphWriteback, graphMode: tigerGraphStatus().mode })
   } catch (error) {
     res.status(502).json({ error: error.message })
   }
