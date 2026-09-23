@@ -221,6 +221,16 @@ function App() {
     setAuth({ enabled: true, authenticated: false })
   }
 
+  function navigate(target: string) {
+    document.getElementById(target)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (target === 'investigations') setDrawerOpen(true)
+  }
+
+  function focusCaseSearch() {
+    document.querySelector<HTMLInputElement>('[aria-label="Search cases"]')?.focus()
+    navigate('investigations')
+  }
+
   if (!auth) return <div className="loading-screen"><LoaderCircle className="spin" /> Checking secure session…</div>
   if (!auth.authenticated) return <LoginScreen onAuthenticated={setAuth} />
   if (!activeCase) {
@@ -229,9 +239,9 @@ function App() {
 
   return (
     <div className="app-shell">
-      <Sidebar datasetStatus={datasetStatus} llmStatus={llmStatus} onDemo={() => setToast('This demo focuses on the complete investigation workflow.')} onLogout={auth.enabled ? logout : undefined} username={auth.user?.username || 'Local analyst'} />
+      <Sidebar datasetStatus={datasetStatus} llmStatus={llmStatus} onNavigate={navigate} onLogout={auth.enabled ? logout : undefined} username={auth.user?.username || 'Public demo'} />
       <div className="app-content">
-        <Topbar onOpenQueue={() => setDrawerOpen(true)} />
+        <Topbar onOpenQueue={() => setDrawerOpen(true)} onFocusSearch={focusCaseSearch} />
         <div className="workspace">
           <CaseQueue
             items={filteredCases}
@@ -325,7 +335,7 @@ function LoginScreen({ onAuthenticated }: { onAuthenticated: (session: AuthState
   )
 }
 
-function Sidebar({ onDemo, onLogout, username, datasetStatus, llmStatus }: { onDemo: () => void; onLogout?: () => void; username: string; datasetStatus: { complete: boolean; downloading: boolean; approximateProgress: number; indexed: boolean; appCasesReady: boolean } | null; llmStatus: { configured: number; total: number } | null }) {
+function Sidebar({ onNavigate, onLogout, username, datasetStatus, llmStatus }: { onNavigate: (target: string) => void; onLogout?: () => void; username: string; datasetStatus: { complete: boolean; downloading: boolean; approximateProgress: number; indexed: boolean; appCasesReady: boolean } | null; llmStatus: { configured: number; total: number } | null }) {
   const dataLabel = datasetStatus?.appCasesReady
     ? 'HHGOA cases active'
     : datasetStatus?.indexed
@@ -345,16 +355,16 @@ function Sidebar({ onDemo, onLogout, username, datasetStatus, llmStatus }: { onD
         <span className="nav-section">Workspace</span>
         {nav.map((item) => {
           const Icon = item.icon
+          const target = item.label === 'Command center' ? 'command-center' : item.label === 'Investigations' ? 'investigations' : item.label === 'Entity graph' ? 'entity-graph' : 'case-memory'
           return (
-            <button key={item.label} className={item.active ? 'active' : ''} onClick={item.active ? undefined : onDemo}>
+            <button key={item.label} className={item.active ? 'active' : ''} onClick={() => onNavigate(target)}>
               <Icon /> <span>{item.label}</span>{item.count && <em>{item.count}</em>}
             </button>
           )
         })}
         <span className="nav-section second">Control</span>
-        <button onClick={onDemo}><FileCheck2 /><span>Policies</span></button>
-        <button onClick={onDemo}><UsersRound /><span>Team & approvals</span></button>
-        <button onClick={onDemo}><Settings /><span>Settings</span></button>
+        <button onClick={() => onNavigate('policy-controls')}><FileCheck2 /><span>Policies</span></button>
+        <button onClick={() => onNavigate('policy-controls')}><UsersRound /><span>Team & approvals</span></button>
       </nav>
       <div className="sidebar-status">
         <div className="status-line"><span className="pulse-dot" />Agent systems operational</div>
@@ -363,24 +373,23 @@ function Sidebar({ onDemo, onLogout, username, datasetStatus, llmStatus }: { onD
         <div className="system-line"><span>AI ensemble</span><b>{llmStatus ? `${llmStatus.configured}/${llmStatus.total} configured` : 'Checking'}</b></div>
         <div className="system-line"><span>Policy engine</span><b>v4.8</b></div>
       </div>
-      <button className="user-card" onClick={onLogout || onDemo}>
+      {onLogout ? <button className="user-card" onClick={onLogout}>
         <span className="avatar">AR</span>
+        {/* @ts-expect-error onLogout is narrowed by the parent conditional */}
         <span><strong>{username}</strong><small>{onLogout ? 'Sign out · Fraud analyst' : 'Fraud analyst · L2'}</small></span>
         <ChevronDown />
-      </button>
+      </button> : <div className="user-card"><span className="avatar">GD</span><span><strong>{username}</strong><small>Hackathon judge access</small></span></div>}
     </aside>
   )
 }
 
-function Topbar({ onOpenQueue }: { onOpenQueue: () => void }) {
+function Topbar({ onOpenQueue, onFocusSearch }: { onOpenQueue: () => void; onFocusSearch: () => void }) {
   return (
     <header className="topbar">
       <button className="mobile-queue" aria-label="Open case queue" onClick={onOpenQueue}><FolderKanban /></button>
       <div className="breadcrumbs"><span>Investigations</span><b>/</b><strong>Case workspace</strong></div>
       <div className="top-actions">
-        <button className="shortcut"><Search />Search anything <kbd><Command />K</kbd></button>
-        <button className="icon-button" aria-label="Notifications"><Bell /><span /></button>
-        <button className="icon-button" aria-label="Help"><HelpCircle /></button>
+        <button className="shortcut" onClick={onFocusSearch}><Search />Find a case <kbd><Command />K</kbd></button>
       </div>
     </header>
   )
@@ -390,10 +399,10 @@ function CaseQueue({ items, selectedId, search, onSearch, onSelect, mobileOpen, 
   items: FraudCase[]; selectedId: string; search: string; onSearch: (value: string) => void; onSelect: (id: string) => void; mobileOpen: boolean; onClose: () => void
 }) {
   return (
-    <aside className={`case-queue ${mobileOpen ? 'mobile-open' : ''}`}>
+    <aside id="investigations" className={`case-queue ${mobileOpen ? 'mobile-open' : ''}`}>
       <div className="queue-title"><div><span>CASE QUEUE</span><h2>HHGOA investigations</h2></div><button aria-label="Close case queue" onClick={onClose}><X /></button></div>
       <div className="queue-search"><Search /><input aria-label="Search cases" placeholder="Search cases" value={search} onChange={(e) => onSearch(e.target.value)} /></div>
-      <div className="queue-filter"><button className="active">Case pack <span>{items.length}</span></button><button>All <span>20</span></button></div>
+      <div className="queue-filter"><span>HHGOA case pack <b>{items.length}</b></span></div>
       <div className="queue-list">
         {items.map((item) => (
           <button key={item.id} className={`case-row ${item.id === selectedId ? 'selected' : ''}`} onClick={() => { onSelect(item.id); onClose() }}>
@@ -406,14 +415,13 @@ function CaseQueue({ items, selectedId, search, onSearch, onSelect, mobileOpen, 
         ))}
         {!items.length && <div className="empty-queue">No investigations match that search.</div>}
       </div>
-      <button className="new-case"><Plus /> New investigation</button>
     </aside>
   )
 }
 
 function CaseHeader({ item, onRun, onExport, running }: { item: FraudCase; onRun: () => void; onExport: () => void; running: boolean }) {
   return (
-    <header className="case-header">
+    <header id="command-center" className="case-header">
       <div>
         <div className="eyebrow-row"><span className={`priority-badge ${item.priority.toLowerCase()}`}><CircleDot />{item.priority}</span><span className="case-id">{item.id}</span><span className="opened"><Clock3 /> Opened {item.openedAt}</span></div>
         <h1>{item.trigger}</h1>
@@ -447,12 +455,12 @@ function GraphCard({ graph, selectedNode, onSelectNode, graphMode }: { graph: Fr
   const nodes = graph.nodes || []
   const get = (id: string) => nodes.find((node) => node.id === id)
   return (
-    <section className="card graph-card">
+    <section id="entity-graph" className="card graph-card">
       <CardHeader
         icon={<Network />}
         eyebrow="CONNECTED EVIDENCE"
         title="Investigation graph"
-        action={<div className="graph-actions"><span className="live-badge"><i />{graphMode === 'live' ? 'Live TigerGraph' : 'Local HHGOA graph'}</span><button aria-label="Zoom out"><Minus /></button><button aria-label="Zoom in"><Plus /></button></div>}
+        action={<div className="graph-actions"><span className="live-badge"><i />{graphMode === 'live' ? 'Live TigerGraph' : 'Local HHGOA graph'}</span></div>}
       />
       <div className="graph-stage">
         {nodes.length ? (
@@ -571,7 +579,7 @@ function RecommendationCard({ recommendation, risk, confidence, status, onApprov
       ? 'report filing'
       : 'recommendation'
   return (
-    <section className="card recommendation-card">
+    <section id="policy-controls" className="card recommendation-card">
       <div className="decision-top"><span className="recommend-label"><Zap />NEXT BEST ACTION</span><span className="human-chip">{needsApproval ? <LockKeyhole /> : <CheckCircle2 />}{needsApproval ? 'Human approval' : 'Auto permitted'}</span></div>
       <div className="score-row">
         <div className="risk-dial" style={{ '--score': `${risk * 3.6}deg` } as React.CSSProperties}><div><strong>{risk}</strong><span>RISK</span></div></div>
@@ -640,7 +648,7 @@ function MemoryCard({ assessment }: { assessment: RunResult['analysis'] | undefi
     { id: 'FI-1734', outcome: 'Confirmed ATO', similarity: 0.84, action: 'Blocked wire after challenge', indicators: [], lossPrevented: 35500 },
   ]
   return (
-    <section className="card memory-card">
+    <section id="case-memory" className="card memory-card">
       <CardHeader icon={<BookOpenText />} eyebrow="CASE MEMORY" title="Similar outcomes" action={<span className="memory-count">{memories.length} hits</span>} />
       {memories.slice(0, 2).map((item) => <div className="memory-row" key={item.id}><div><strong>{item.id}</strong><span>{item.outcome}</span><small>{item.action}</small></div><b>{Math.round(item.similarity * 100)}%<small>match</small></b></div>)}
       <div className="memory-insight"><Sparkles /><span><strong>Memory insight</strong>Restrictive action prevented loss in 2 of 2 closely matched confirmed cases.</span></div>
