@@ -1,0 +1,114 @@
+{
+  "case_id": "HHG-010",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.92,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3506725"
+    ],
+    "first_suspicious_txn_id": "3506725",
+    "connected_card_ids": [],
+    "connected_device_profiles": [
+      "Windows | Windows 10 | edge 16.0 | 1366x768"
+    ],
+    "exposure_usd": 1000.03,
+    "evidence": [
+      {
+        "claim": "The flagged online transaction is 14.5x the card's prior median amount and carries model risk 0.90.",
+        "source": "graph",
+        "ref": "query:card_baseline(card_id=C10434-K1)",
+        "entity_ids": [
+          "3506725",
+          "C10434-K1"
+        ]
+      },
+      {
+        "claim": "The transaction came from device profile DVC-CC94CC7B2D, marked New for the account.",
+        "source": "graph",
+        "ref": "query:device_context(device_id=DVC-CC94CC7B2D)",
+        "entity_ids": [
+          "3506725",
+          "DVC-CC94CC7B2D"
+        ]
+      },
+      {
+        "claim": "Resolved-case memory contains closely matched investigations: CC-4362 (confirmed_fraud, card_not_present_new_device), CC-3549 (confirmed_fraud, card_not_present_new_device), CC-2720 (confirmed_fraud, card_not_present_new_device).",
+        "source": "graph",
+        "ref": "query:similar_resolved_cases(case_id=HHG-010)",
+        "entity_ids": [
+          "CC-4362",
+          "CC-3549",
+          "CC-2720"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-4362",
+      "CC-3549",
+      "CC-2720"
+    ],
+    "summary": "The investigation identifies card not present new device with probability 0.92. 1 transaction(s) totaling $1,000.03 form the episode. The recommendation follows R2 and pattern evidence: block and reissue; exposure is $1,000.03.",
+    "written_to_graph": false,
+    "graph_case_id": ""
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2 and pattern evidence: block and reissue; exposure is $1,000.03."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 and policy 3a: retain the fraud investigation and evidence."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "R2/R6 and policy 3a: exposure exceeds $1,000 or the activity has a shared-device connection."
+      }
+    ],
+    "final": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2 and pattern evidence: block and reissue; exposure is $1,000.03."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 and policy 3a: retain the fraud investigation and evidence."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "R2/R6 and policy 3a: exposure exceeds $1,000 or the activity has a shared-device connection."
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": true,
+    "reason": "Policy 3a and R6/R9: strongly suspected fraud exceeds the reporting threshold or connects to coordinated activity across customers.",
+    "narrative": "Customer C10434 and card C10434-K1 were investigated after risk score identified transaction 3506725 on 2016-12-02. The investigation identified 1 related transaction(s) totaling $1,000.03 from 2016-12-02 through 2016-12-02. The activity occurred through the online channel under product code R with billing region 469.0. Device profile DVC-CC94CC7B2D was New for the account and used no recorded proxy classification. Graph traversal connected the activity to 0 mapped card(s) beyond the subject card: none. The observed behavior is assessed as card not present new device with fraud probability 0.92, supported by transaction, device, customer, and resolved-case evidence. The bank recommends the actions recorded in the associated case, including human approval for any card block or regulatory filing.",
+    "subjects": [
+      "C10434",
+      "C10434-K1",
+      "DVC-CC94CC7B2D"
+    ],
+    "total_amount_usd": 1000.03,
+    "activity_dates": [
+      "2016-12-02",
+      "2016-12-02"
+    ]
+  },
+  "stop_reason": "The fraud episode, affected transactions, and required policy actions are identified with at least two independent evidence sources; further investigation is unlikely to change the decision.",
+  "tool_calls": 8,
+  "tokens": 0,
+  "latency_s": 0.0
+}

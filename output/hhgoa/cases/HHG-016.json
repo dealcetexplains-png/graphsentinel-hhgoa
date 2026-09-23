@@ -1,0 +1,169 @@
+{
+  "case_id": "HHG-016",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.95,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3523010",
+      "3528575",
+      "3531451",
+      "3531452",
+      "3531522",
+      "3534386",
+      "3534820"
+    ],
+    "first_suspicious_txn_id": "3523010",
+    "connected_card_ids": [
+      "C00854-K2",
+      "C03047-K2",
+      "C05793-K1",
+      "C06224-K2",
+      "C09251-K1"
+    ],
+    "connected_device_profiles": [
+      "Windows | unknown | edge 16.0 | unknown"
+    ],
+    "exposure_usd": 417.45,
+    "evidence": [
+      {
+        "claim": "7 related transactions totaling $417.45 occurred from 2016-12-07 20:38 to 2016-12-11 22:39.",
+        "source": "graph",
+        "ref": "query:episode_window(case_id=HHG-016)",
+        "entity_ids": [
+          "3523010",
+          "3528575",
+          "3531451",
+          "3531452",
+          "3531522",
+          "3534386",
+          "3534820"
+        ]
+      },
+      {
+        "claim": "The transaction came from device profile DVC-513798C808, marked New for the account.",
+        "source": "graph",
+        "ref": "query:device_context(device_id=DVC-513798C808)",
+        "entity_ids": [
+          "3534820",
+          "DVC-513798C808"
+        ]
+      },
+      {
+        "claim": "The same device profile links the episode to 6 other customer(s), including C00854, C03047, C05630, C05793, C06224.",
+        "source": "graph",
+        "ref": "query:device_neighbors(device_id=DVC-513798C808)",
+        "entity_ids": [
+          "DVC-513798C808",
+          "C00854",
+          "C03047",
+          "C05630",
+          "C05793",
+          "C06224",
+          "C09251"
+        ]
+      },
+      {
+        "claim": "Resolved-case memory contains closely matched investigations: CC-2675 (confirmed_fraud, card_not_present_new_device), CC-2732 (confirmed_fraud, card_not_present_new_device), CC-3580 (confirmed_fraud, card_not_present_new_device).",
+        "source": "graph",
+        "ref": "query:similar_resolved_cases(case_id=HHG-016)",
+        "entity_ids": [
+          "CC-2675",
+          "CC-2732",
+          "CC-3580"
+        ]
+      },
+      {
+        "claim": "The customer reported that they did not make the flagged transaction.",
+        "source": "customer",
+        "ref": "case_pack.trigger_text",
+        "entity_ids": [
+          "C09988",
+          "3534820"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2675",
+      "CC-2732",
+      "CC-3580"
+    ],
+    "summary": "The investigation identifies card not present new device with probability 0.95. 7 transaction(s) totaling $417.45 form the episode. The device graph connects 5 additional mapped card(s). The recommendation follows R2 and pattern evidence: block and reissue; exposure is $417.45.",
+    "written_to_graph": false,
+    "graph_case_id": ""
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2 and pattern evidence: block and reissue; exposure is $417.45."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 and policy 3a: retain the fraud investigation and evidence."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "R2/R6 and policy 3a: exposure exceeds $1,000 or the activity has a shared-device connection."
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "R6: monitor mapped cards sharing the device profile."
+      }
+    ],
+    "final": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2 and pattern evidence: block and reissue; exposure is $417.45."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 and policy 3a: retain the fraud investigation and evidence."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "R2/R6 and policy 3a: exposure exceeds $1,000 or the activity has a shared-device connection."
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "R6: monitor mapped cards sharing the device profile."
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": true,
+    "reason": "Policy 3a and R6/R9: strongly suspected fraud exceeds the reporting threshold or connects to coordinated activity across customers.",
+    "narrative": "Customer C09988 and card C09988-K1 were investigated after customer report identified transaction 3534820 on 2016-12-11. The investigation identified 7 related transaction(s) totaling $417.45 from 2016-12-07 through 2016-12-11. The activity occurred through the online channel under product code C with billing region not supplied. Device profile DVC-513798C808 was New for the account and used no recorded proxy classification. Graph traversal connected the activity to 5 mapped card(s) beyond the subject card: C00854-K2, C03047-K2, C05793-K1, C06224-K2, C09251-K1. The observed behavior is assessed as card not present new device with fraud probability 0.95, supported by transaction, device, customer, and resolved-case evidence. The bank recommends the actions recorded in the associated case, including human approval for any card block or regulatory filing.",
+    "subjects": [
+      "C09988",
+      "C09988-K1",
+      "C00854-K2",
+      "C03047-K2",
+      "C05793-K1",
+      "C06224-K2",
+      "C09251-K1",
+      "DVC-513798C808"
+    ],
+    "total_amount_usd": 417.45,
+    "activity_dates": [
+      "2016-12-07",
+      "2016-12-11"
+    ]
+  },
+  "stop_reason": "The fraud episode, affected transactions, and required policy actions are identified with at least two independent evidence sources; further investigation is unlikely to change the decision.",
+  "tool_calls": 10,
+  "tokens": 0,
+  "latency_s": 0.0
+}

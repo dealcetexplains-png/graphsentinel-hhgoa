@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+*.log
+tmp/
+docs/*.csv
+docs/*.crdownload
+data/hhgoa/*.json
+data/tigergraph/
+__pycache__/
+*.pyc

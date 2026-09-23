@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "tigergraph": {
+      "command": "uvx",
+      "args": ["tigergraph-mcp"],
+      "env": {
+        "TG_HOST": "https://your-instance.i.tgcloud.io",
+        "TG_GRAPH": "FraudGraph",
+        "TG_TOKEN": "replace-me"
+      }
+    }
+  }
+}

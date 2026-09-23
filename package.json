@@ -1,0 +1,40 @@
+{
+  "name": "graph-sentinel",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n API,WEB -c yellow,cyan \"node --watch server/index.mjs\" \"vite\"",
+    "start": "node server/index.mjs",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "node --test server/*.test.mjs",
+    "data:build": "python scripts/build_hhgoa_index.py",
+    "data:cases": "python scripts/generate_hhgoa_cases.py",
+    "data:validate": "python scripts/validate_hhgoa_cases.py",
+    "data:all": "python scripts/build_hhgoa_index.py && python scripts/generate_hhgoa_cases.py && python scripts/validate_hhgoa_cases.py",
+    "graph:prepare": "python scripts/prepare_tigergraph_load.py",
+    "graph:load": "python scripts/run_tigergraph_load.py",
+    "test:tigergraph:live": "node --test server/tigergraph.live.test.mjs",
+    "llm:check": "node scripts/check_gemini_keys.mjs",
+    "submission:live": "node scripts/run_live_submission.mjs",
+    "submission:validate-live": "python scripts/validate_hhgoa_cases.py --cases-dir output/hhgoa/live-cases",
+    "submission:package": "python scripts/package_submission.py"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "concurrently": "latest",
+    "express": "latest",
+    "lucide-react": "latest",
+    "vite": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "typescript": "latest"
+  },
+  "devDependencies": {
+    "@types/express": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest"
+  }
+}

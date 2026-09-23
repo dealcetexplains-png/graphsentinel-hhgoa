@@ -1,0 +1,49 @@
+USE GRAPH GraphSentinel
+
+// Main context call used by server/tigergraph.mjs. It returns the alert transaction
+// plus customer, card, device, region, email, and case-memory neighbors within 3 hops.
+CREATE QUERY fraud_case_context(STRING transaction_id) FOR GRAPH GraphSentinel {
+  all_transactions = {Transaction.*};
+  seed = SELECT t FROM all_transactions:t
+    WHERE t.id == transaction_id;
+  cards = SELECT c FROM seed:s -(ON_SOURCE_CARD:e)-> Card:c;
+  customers = SELECT u FROM cards:c -(OWNED_BY:e)-> Customer:u;
+  devices = SELECT d FROM seed:s -(FROM_DEVICE:e)-> DeviceProfile:d;
+  purchaser_emails = SELECT e FROM seed:s -(PURCHASER_EMAIL:x)-> EmailDomain:e;
+  recipient_emails = SELECT e FROM seed:s -(RECIPIENT_EMAIL:x)-> EmailDomain:e;
+  regions = SELECT r FROM seed:s -(BILLED_IN:x)-> BillingRegion:r;
+  PRINT seed, cards, customers, devices, purchaser_emails, recipient_emails, regions;
+}
+
+// Card velocity and recurring-payment lookup within an explicit time window.
+CREATE QUERY card_window(STRING card_id, DATETIME start_ts, DATETIME end_ts) FOR GRAPH GraphSentinel {
+  all_cards = {Card.*};
+  card = SELECT c FROM all_cards:c WHERE c.id == card_id;
+  transactions = SELECT t FROM card:c -(MADE:e)-> Transaction:t
+    WHERE t.ts >= start_ts AND t.ts <= end_ts
+    ORDER BY t.ts ASC;
+  PRINT card, transactions;
+}
+
+// Cross-customer device linkage used for R6 shared-origin investigations.
+CREATE QUERY device_neighbors(STRING device_id, DATETIME start_ts, DATETIME end_ts) FOR GRAPH GraphSentinel {
+  all_devices = {DeviceProfile.*};
+  device = SELECT d FROM all_devices:d WHERE d.id == device_id;
+  transactions = SELECT t FROM device:d -(USED_BY_TRANSACTION:e)-> Transaction:t
+    WHERE t.ts >= start_ts AND t.ts <= end_ts
+    ORDER BY t.ts ASC;
+  cards = SELECT c FROM transactions:t -(ON_SOURCE_CARD:e)-> Card:c;
+  customers = SELECT u FROM cards:c -(OWNED_BY:e)-> Customer:u;
+  PRINT device, transactions, cards, customers;
+}
+
+// Resolved-case memory. SIMILAR_TO edges can come from vector search or an
+// offline similarity pass; this query keeps retrieval deterministic and auditable.
+CREATE QUERY similar_resolved_cases(STRING case_id, INT result_limit = 5) FOR GRAPH GraphSentinel {
+  all_cases = {InvestigationCase.*, ClosedCase.*};
+  seed = SELECT c FROM all_cases:c WHERE c.id == case_id;
+  matches = SELECT other FROM seed:s -(SIMILAR_TO:e)-> ClosedCase:other
+    ORDER BY e.score DESC
+    LIMIT result_limit;
+  PRINT matches;
+}

@@ -1,0 +1,110 @@
+{
+  "case_id": "HHG-020",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.25,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0,
+    "evidence": [
+      {
+        "claim": "The amount is 1.2x the card's prior median and is consistent with the established transaction range.",
+        "source": "graph",
+        "ref": "query:card_baseline(card_id=C12265-K2)",
+        "entity_ids": [
+          "3509359",
+          "C12265-K2"
+        ]
+      },
+      {
+        "claim": "Billing region 264.0 appears in 82 earlier transactions on this card; the location is not independently anomalous.",
+        "source": "graph",
+        "ref": "query:region_history(card_id=C12265-K2)",
+        "entity_ids": [
+          "C12265-K2",
+          "REGION-264.0"
+        ]
+      },
+      {
+        "claim": "The device is marked New, but no transaction burst, material amount anomaly, or sufficiently specific shared-origin link accompanies it.",
+        "source": "graph",
+        "ref": "query:device_context(device_id=DVC-94C3ADBFDF)",
+        "entity_ids": [
+          "3509359",
+          "DVC-94C3ADBFDF"
+        ]
+      },
+      {
+        "claim": "The model score was treated as an alerting input rather than a fraud verdict, as required by Fraud Policy section 0.",
+        "source": "document",
+        "ref": "Fraud Policy section 0",
+        "entity_ids": [
+          "3509359"
+        ]
+      },
+      {
+        "claim": "Customer confirms the transaction and recognizes the device or purchase context.",
+        "source": "customer",
+        "ref": "evidence_request:1",
+        "entity_ids": [
+          "C12265",
+          "3509359"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2277",
+      "CC-2447",
+      "CC-3216"
+    ],
+    "summary": "The alert is assessed as legitimate with fraud probability 0.25. Amount, region, velocity, and available device context do not provide enough independent fraud evidence. The model score is not treated as a verdict.",
+    "written_to_graph": false,
+    "graph_case_id": ""
+  },
+  "evidence_requests": [
+    {
+      "type": "customer_validation",
+      "asked_after_step": 4,
+      "assumed_response": "Customer confirms the transaction and recognizes the device or purchase context."
+    }
+  ],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy 3a: requesting evidence requires an internal case."
+      },
+      {
+        "action": "VERIFY_WITH_CUSTOMER",
+        "route": "auto",
+        "reason": "R1: the current evidence does not justify a block."
+      }
+    ],
+    "final": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "R3: customer confirmation resolves the alert as legitimate."
+      }
+    ],
+    "what_changed": "Customer confirmation reduced the residual uncertainty and removed the need for monitoring or restriction."
+  },
+  "sar": {
+    "file": false,
+    "reason": "Policy 3a: the episode does not cross the reporting threshold and no confirmed shared-origin fraud requires filing.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "The recurring-pattern or baseline evidence and customer confirmation place fraud probability at or below the stopping threshold.",
+  "tool_calls": 10,
+  "tokens": 0,
+  "latency_s": 0.0
+}

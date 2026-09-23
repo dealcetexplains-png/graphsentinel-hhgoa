@@ -1,0 +1,248 @@
+[
+  {
+    "case_id": "HHG-001",
+    "verdict": "legitimate",
+    "probability": 0.1,
+    "pattern": "none",
+    "exposure": 0,
+    "sar": false,
+    "actions": [
+      "CLOSE_NO_FRAUD"
+    ]
+  },
+  {
+    "case_id": "HHG-002",
+    "verdict": "fraud",
+    "probability": 0.91,
+    "pattern": "card_not_present_fraud",
+    "exposure": 292.36,
+    "sar": false,
+    "actions": [
+      "BLOCK_CARD",
+      "CREATE_CASE"
+    ]
+  },
+  {
+    "case_id": "HHG-003",
+    "verdict": "legitimate",
+    "probability": 0.12,
+    "pattern": "none",
+    "exposure": 0,
+    "sar": false,
+    "actions": [
+      "CLOSE_NO_FRAUD",
+      "WARN_CUSTOMER"
+    ]
+  },
+  {
+    "case_id": "HHG-004",
+    "verdict": "fraud",
+    "probability": 0.95,
+    "pattern": "card_not_present_new_device",
+    "exposure": 128.33,
+    "sar": false,
+    "actions": [
+      "BLOCK_CARD",
+      "CREATE_CASE"
+    ]
+  },
+  {
+    "case_id": "HHG-005",
+    "verdict": "legitimate",
+    "probability": 0.24,
+    "pattern": "none",
+    "exposure": 0,
+    "sar": false,
+    "actions": [
+      "CLOSE_NO_FRAUD"
+    ]
+  },
+  {
+    "case_id": "HHG-006",
+    "verdict": "fraud",
+    "probability": 0.99,
+    "pattern": "card_not_present_new_device",
+    "exposure": 1906.07,
+    "sar": true,
+    "actions": [
+      "BLOCK_CARD",
+      "CREATE_CASE",
+      "FILE_REPORT"
+    ]
+  },
+  {
+    "case_id": "HHG-007",
+    "verdict": "legitimate",
+    "probability": 0.06,
+    "pattern": "none",
+    "exposure": 0,
+    "sar": false,
+    "actions": [
+      "CLOSE_NO_FRAUD"
+    ]
+  },
+  {
+    "case_id": "HHG-008",
+    "verdict": "legitimate",
+    "probability": 0.13,
+    "pattern": "none",
+    "exposure": 0,
+    "sar": false,
+    "actions": [
+      "CLOSE_NO_FRAUD",
+      "WARN_CUSTOMER"
+    ]
+  },
+  {
+    "case_id": "HHG-009",
+    "verdict": "legitimate",
+    "probability": 0.12,
+    "pattern": "none",
+    "exposure": 0,
+    "sar": false,
+    "actions": [
+      "CLOSE_NO_FRAUD",
+      "WARN_CUSTOMER"
+    ]
+  },
+  {
+    "case_id": "HHG-010",
+    "verdict": "fraud",
+    "probability": 0.92,
+    "pattern": "card_not_present_new_device",
+    "exposure": 1000.03,
+    "sar": true,
+    "actions": [
+      "BLOCK_CARD",
+      "CREATE_CASE",
+      "FILE_REPORT"
+    ]
+  },
+  {
+    "case_id": "HHG-011",
+    "verdict": "fraud",
+    "probability": 0.97,
+    "pattern": "card_not_present_new_device",
+    "exposure": 513.89,
+    "sar": true,
+    "actions": [
+      "BLOCK_CARD",
+      "CREATE_CASE",
+      "FILE_REPORT",
+      "MONITOR_CONNECTED_CARDS"
+    ]
+  },
+  {
+    "case_id": "HHG-012",
+    "verdict": "legitimate",
+    "probability": 0.08,
+    "pattern": "none",
+    "exposure": 0,
+    "sar": false,
+    "actions": [
+      "CLOSE_NO_FRAUD",
+      "WARN_CUSTOMER"
+    ]
+  },
+  {
+    "case_id": "HHG-013",
+    "verdict": "legitimate",
+    "probability": 0.28,
+    "pattern": "none",
+    "exposure": 0,
+    "sar": false,
+    "actions": [
+      "CLOSE_NO_FRAUD"
+    ]
+  },
+  {
+    "case_id": "HHG-014",
+    "verdict": "fraud",
+    "probability": 0.96,
+    "pattern": "undocumented",
+    "exposure": 6214.17,
+    "sar": true,
+    "actions": [
+      "CREATE_CASE",
+      "FILE_REPORT",
+      "MONITOR_CONNECTED_CARDS",
+      "ESCALATE_TO_ANALYST"
+    ]
+  },
+  {
+    "case_id": "HHG-015",
+    "verdict": "fraud",
+    "probability": 0.92,
+    "pattern": "card_not_present_new_device",
+    "exposure": 599.94,
+    "sar": false,
+    "actions": [
+      "BLOCK_CARD",
+      "CREATE_CASE"
+    ]
+  },
+  {
+    "case_id": "HHG-016",
+    "verdict": "fraud",
+    "probability": 0.95,
+    "pattern": "card_not_present_new_device",
+    "exposure": 417.45,
+    "sar": true,
+    "actions": [
+      "BLOCK_CARD",
+      "CREATE_CASE",
+      "FILE_REPORT",
+      "MONITOR_CONNECTED_CARDS"
+    ]
+  },
+  {
+    "case_id": "HHG-017",
+    "verdict": "fraud",
+    "probability": 0.9,
+    "pattern": "card_not_present_fraud",
+    "exposure": 300.14,
+    "sar": false,
+    "actions": [
+      "BLOCK_CARD",
+      "CREATE_CASE"
+    ]
+  },
+  {
+    "case_id": "HHG-018",
+    "verdict": "legitimate",
+    "probability": 0.1,
+    "pattern": "none",
+    "exposure": 0,
+    "sar": false,
+    "actions": [
+      "CLOSE_NO_FRAUD",
+      "WARN_CUSTOMER"
+    ]
+  },
+  {
+    "case_id": "HHG-019",
+    "verdict": "fraud",
+    "probability": 0.96,
+    "pattern": "card_not_present_new_device",
+    "exposure": 500.0,
+    "sar": true,
+    "actions": [
+      "DECLINE_TRANSACTION",
+      "STEP_UP_AUTH",
+      "CREATE_CASE",
+      "FILE_REPORT",
+      "MONITOR_CONNECTED_CARDS"
+    ]
+  },
+  {
+    "case_id": "HHG-020",
+    "verdict": "legitimate",
+    "probability": 0.25,
+    "pattern": "none",
+    "exposure": 0,
+    "sar": false,
+    "actions": [
+      "CLOSE_NO_FRAUD"
+    ]
+  }
+]

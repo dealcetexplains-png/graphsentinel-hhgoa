@@ -1,0 +1,118 @@
+{
+  "case_id": "HHG-018",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.1,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0,
+    "evidence": [
+      {
+        "claim": "The disputed $39.08 transaction matches 42 earlier transactions on the same card, product, and channel within 45 days.",
+        "source": "graph",
+        "ref": "query:recurring_pattern(card_id=C02354-K2,days=45)",
+        "entity_ids": [
+          "3491361",
+          "3358348",
+          "3360646",
+          "3371084",
+          "3371579",
+          "3377429",
+          "3382859",
+          "3387808",
+          "3389161"
+        ]
+      },
+      {
+        "claim": "Billing region 126.0 appears in 565 earlier transactions on this card; the location is not independently anomalous.",
+        "source": "graph",
+        "ref": "query:region_history(card_id=C02354-K2)",
+        "entity_ids": [
+          "C02354-K2",
+          "REGION-126.0"
+        ]
+      },
+      {
+        "claim": "The model score was treated as an alerting input rather than a fraud verdict, as required by Fraud Policy section 0.",
+        "source": "document",
+        "ref": "Fraud Policy section 0",
+        "entity_ids": [
+          "3491361"
+        ]
+      },
+      {
+        "claim": "After receiving the transaction descriptor and recurring-payment history, the customer confirms the charge is an existing recurring purchase.",
+        "source": "customer",
+        "ref": "evidence_request:1",
+        "entity_ids": [
+          "C02354",
+          "3491361"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2589",
+      "CC-0631",
+      "CC-3537"
+    ],
+    "summary": "The alert is assessed as legitimate with fraud probability 0.10. The flagged amount and channel match 42 earlier transactions within 45 days, supporting a recurring-payment explanation. The case closes without blocking the card.",
+    "written_to_graph": false,
+    "graph_case_id": ""
+  },
+  "evidence_requests": [
+    {
+      "type": "customer_validation",
+      "asked_after_step": 4,
+      "assumed_response": "After receiving the transaction descriptor and recurring-payment history, the customer confirms the charge is an existing recurring purchase."
+    }
+  ],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy 3a: a customer dispute always creates a case."
+      },
+      {
+        "action": "VERIFY_WITH_CUSTOMER",
+        "route": "auto",
+        "reason": "R7: explain and verify a charge that matches the customer's recurring pattern."
+      },
+      {
+        "action": "WARN_CUSTOMER",
+        "route": "auto",
+        "reason": "R7: send a recurring-charge reminder; do not block the card."
+      }
+    ],
+    "final": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "R3 and R7: the customer confirmed the recurring purchase after reviewing the descriptor."
+      },
+      {
+        "action": "WARN_CUSTOMER",
+        "route": "auto",
+        "reason": "R7: retain an informational recurring-charge reminder."
+      }
+    ],
+    "what_changed": "The recurring-history evidence and customer confirmation resolved the dispute as legitimate, so the case closes without a block."
+  },
+  "sar": {
+    "file": false,
+    "reason": "Policy 3a: the episode does not cross the reporting threshold and no confirmed shared-origin fraud requires filing.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "The recurring-pattern or baseline evidence and customer confirmation place fraud probability at or below the stopping threshold.",
+  "tool_calls": 9,
+  "tokens": 0,
+  "latency_s": 0.0
+}
