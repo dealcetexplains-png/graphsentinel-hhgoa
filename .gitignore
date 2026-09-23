@@ -11,3 +11,9 @@ data/hhgoa/*.json
 data/tigergraph/
 __pycache__/
 *.pyc
+.chart-data-*/
+.codex-finalizer/
+*.tsbuildinfo
+submission/*.zip
+submission/*.sha256
+submission/*.pptx
