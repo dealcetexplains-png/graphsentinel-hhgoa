@@ -1,0 +1,101 @@
+{
+  "case_id": "HHG-002",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.91,
+    "pattern": "card_not_present_fraud",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3478782"
+    ],
+    "first_suspicious_txn_id": "3478782",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 292.36,
+    "evidence": [
+      {
+        "claim": "The flagged online transaction is 6.2x the card's prior median amount and carries model risk 0.79.",
+        "source": "graph",
+        "ref": "query:card_baseline(card_id=C11891-K1)",
+        "entity_ids": [
+          "3478782",
+          "C11891-K1"
+        ]
+      },
+      {
+        "claim": "Resolved-case memory contains closely matched investigations: CC-4160 (confirmed_fraud, card_not_present_fraud), CC-4369 (confirmed_fraud, card_not_present_new_device), CC-4373 (confirmed_fraud, card_not_present_fraud).",
+        "source": "graph",
+        "ref": "query:similar_resolved_cases(case_id=HHG-002)",
+        "entity_ids": [
+          "CC-4160",
+          "CC-4369",
+          "CC-4373"
+        ]
+      },
+      {
+        "claim": "Customer states they did not make the online purchase and still possess the card.",
+        "source": "customer",
+        "ref": "evidence_request:1",
+        "entity_ids": [
+          "C11891",
+          "3478782"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-4160",
+      "CC-4369",
+      "CC-4373"
+    ],
+    "summary": "The investigation identifies card not present fraud with probability 0.91. 1 transaction(s) totaling $292.36 form the episode. The recommendation follows R2: customer denial confirms unauthorized use; exposure is $292.36.",
+    "written_to_graph": false,
+    "graph_case_id": ""
+  },
+  "evidence_requests": [
+    {
+      "type": "customer_validation",
+      "asked_after_step": 4,
+      "assumed_response": "Customer states they did not make the online purchase and still possess the card."
+    }
+  ],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy 3a: probability exceeds 0.30 and customer verification is required."
+      },
+      {
+        "action": "VERIFY_WITH_CUSTOMER",
+        "route": "auto",
+        "reason": "R1: a single unusual online purchase requires verification before blocking."
+      }
+    ],
+    "final": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2: customer denial confirms unauthorized use; exposure is $292.36."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2: retain the confirmed investigation record."
+      }
+    ],
+    "what_changed": "Customer denial converted an ambiguous single transaction into confirmed card-not-present fraud."
+  },
+  "sar": {
+    "file": false,
+    "reason": "Policy 3a: the episode does not cross the reporting threshold and no confirmed shared-origin fraud requires filing.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "The fraud episode, affected transactions, and required policy actions are identified with at least two independent evidence sources; further investigation is unlikely to change the decision.",
+  "tool_calls": 8,
+  "tokens": 0,
+  "latency_s": 0.0
+}

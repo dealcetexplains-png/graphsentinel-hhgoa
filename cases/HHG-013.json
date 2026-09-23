@@ -1,0 +1,101 @@
+{
+  "case_id": "HHG-013",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.28,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0,
+    "evidence": [
+      {
+        "claim": "The amount is 0.6x the card's prior median and is consistent with the established transaction range.",
+        "source": "graph",
+        "ref": "query:card_baseline(card_id=C07671-K2)",
+        "entity_ids": [
+          "3526826",
+          "C07671-K2"
+        ]
+      },
+      {
+        "claim": "The device is marked New, but no transaction burst, material amount anomaly, or sufficiently specific shared-origin link accompanies it.",
+        "source": "graph",
+        "ref": "query:device_context(device_id=DVC-3255B9BC97)",
+        "entity_ids": [
+          "3526826",
+          "DVC-3255B9BC97"
+        ]
+      },
+      {
+        "claim": "The model score was treated as an alerting input rather than a fraud verdict, as required by Fraud Policy section 0.",
+        "source": "document",
+        "ref": "Fraud Policy section 0",
+        "entity_ids": [
+          "3526826"
+        ]
+      },
+      {
+        "claim": "Customer confirms the transaction and recognizes the device or purchase context.",
+        "source": "customer",
+        "ref": "evidence_request:1",
+        "entity_ids": [
+          "C07671",
+          "3526826"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-3216",
+      "CC-1475",
+      "CC-4294"
+    ],
+    "summary": "The alert is assessed as legitimate with fraud probability 0.28. Amount, region, velocity, and available device context do not provide enough independent fraud evidence. The model score is not treated as a verdict.",
+    "written_to_graph": false,
+    "graph_case_id": ""
+  },
+  "evidence_requests": [
+    {
+      "type": "customer_validation",
+      "asked_after_step": 4,
+      "assumed_response": "Customer confirms the transaction and recognizes the device or purchase context."
+    }
+  ],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy 3a: requesting evidence requires an internal case."
+      },
+      {
+        "action": "VERIFY_WITH_CUSTOMER",
+        "route": "auto",
+        "reason": "R1: the current evidence does not justify a block."
+      }
+    ],
+    "final": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "R3: customer confirmation resolves the alert as legitimate."
+      }
+    ],
+    "what_changed": "Customer confirmation reduced the residual uncertainty and removed the need for monitoring or restriction."
+  },
+  "sar": {
+    "file": false,
+    "reason": "Policy 3a: the episode does not cross the reporting threshold and no confirmed shared-origin fraud requires filing.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "The recurring-pattern or baseline evidence and customer confirmation place fraud probability at or below the stopping threshold.",
+  "tool_calls": 9,
+  "tokens": 0,
+  "latency_s": 0.0
+}

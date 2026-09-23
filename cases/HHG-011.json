@@ -1,0 +1,154 @@
+{
+  "case_id": "HHG-011",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.97,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3582730",
+      "3582750",
+      "3583368",
+      "3588413"
+    ],
+    "first_suspicious_txn_id": "3582730",
+    "connected_card_ids": [
+      "C05595-K1",
+      "C05678-K1"
+    ],
+    "connected_device_profiles": [
+      "SM-G610F Build/NRD90M | unknown | chrome 66.0 for android | unknown"
+    ],
+    "exposure_usd": 513.89,
+    "evidence": [
+      {
+        "claim": "4 related transactions totaling $513.89 occurred from 2016-12-28 22:43 to 2016-12-31 03:31.",
+        "source": "graph",
+        "ref": "query:episode_window(case_id=HHG-011)",
+        "entity_ids": [
+          "3582730",
+          "3582750",
+          "3583368",
+          "3588413"
+        ]
+      },
+      {
+        "claim": "The transaction came from device profile DVC-DB5E905972, marked New for the account.",
+        "source": "graph",
+        "ref": "query:device_context(device_id=DVC-DB5E905972)",
+        "entity_ids": [
+          "3583368",
+          "DVC-DB5E905972"
+        ]
+      },
+      {
+        "claim": "The same device profile links the episode to 3 other customer(s), including C03938, C05595, C05678.",
+        "source": "graph",
+        "ref": "query:device_neighbors(device_id=DVC-DB5E905972)",
+        "entity_ids": [
+          "DVC-DB5E905972",
+          "C03938",
+          "C05595",
+          "C05678"
+        ]
+      },
+      {
+        "claim": "Resolved-case memory contains closely matched investigations: CC-3905 (confirmed_fraud, card_not_present_new_device), CC-3206 (confirmed_fraud, card_not_present_new_device), CC-0031 (confirmed_fraud, card_not_present_new_device).",
+        "source": "graph",
+        "ref": "query:similar_resolved_cases(case_id=HHG-011)",
+        "entity_ids": [
+          "CC-3905",
+          "CC-3206",
+          "CC-0031"
+        ]
+      },
+      {
+        "claim": "The customer reported that they did not make the flagged transaction.",
+        "source": "customer",
+        "ref": "case_pack.trigger_text",
+        "entity_ids": [
+          "C11923",
+          "3583368"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-3905",
+      "CC-3206",
+      "CC-0031"
+    ],
+    "summary": "The investigation identifies card not present new device with probability 0.97. 4 transaction(s) totaling $513.89 form the episode. The device graph connects 2 additional mapped card(s). The recommendation follows R2 and pattern evidence: block and reissue; exposure is $513.89.",
+    "written_to_graph": false,
+    "graph_case_id": ""
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2 and pattern evidence: block and reissue; exposure is $513.89."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 and policy 3a: retain the fraud investigation and evidence."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "R2/R6 and policy 3a: exposure exceeds $1,000 or the activity has a shared-device connection."
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "R6: monitor mapped cards sharing the device profile."
+      }
+    ],
+    "final": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2 and pattern evidence: block and reissue; exposure is $513.89."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 and policy 3a: retain the fraud investigation and evidence."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "R2/R6 and policy 3a: exposure exceeds $1,000 or the activity has a shared-device connection."
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "R6: monitor mapped cards sharing the device profile."
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": true,
+    "reason": "Policy 3a and R6/R9: strongly suspected fraud exceeds the reporting threshold or connects to coordinated activity across customers.",
+    "narrative": "Customer C11923 and card C11923-K2 were investigated after customer report identified transaction 3583368 on 2016-12-29. The investigation identified 4 related transaction(s) totaling $513.89 from 2016-12-28 through 2016-12-31. The activity occurred through the online channel under product code C with billing region not supplied. Device profile DVC-DB5E905972 was New for the account and used no recorded proxy classification. Graph traversal connected the activity to 2 mapped card(s) beyond the subject card: C05595-K1, C05678-K1. The observed behavior is assessed as card not present new device with fraud probability 0.97, supported by transaction, device, customer, and resolved-case evidence. The bank recommends the actions recorded in the associated case, including human approval for any card block or regulatory filing.",
+    "subjects": [
+      "C11923",
+      "C11923-K2",
+      "C05595-K1",
+      "C05678-K1",
+      "DVC-DB5E905972"
+    ],
+    "total_amount_usd": 513.89,
+    "activity_dates": [
+      "2016-12-28",
+      "2016-12-31"
+    ]
+  },
+  "stop_reason": "The fraud episode, affected transactions, and required policy actions are identified with at least two independent evidence sources; further investigation is unlikely to change the decision.",
+  "tool_calls": 10,
+  "tokens": 0,
+  "latency_s": 0.0
+}

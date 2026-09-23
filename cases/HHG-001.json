@@ -1,0 +1,81 @@
+{
+  "case_id": "HHG-001",
+  "case": {
+    "status": "closed_legitimate",
+    "verdict": "legitimate",
+    "fraud_probability": 0.1,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 0,
+    "evidence": [
+      {
+        "claim": "The amount is 0.9x the card's prior median and is consistent with the established transaction range.",
+        "source": "graph",
+        "ref": "query:card_baseline(card_id=C12382-K1)",
+        "entity_ids": [
+          "3514030",
+          "C12382-K1"
+        ]
+      },
+      {
+        "claim": "Billing region 444.0 appears in 10 earlier transactions on this card; the location is not independently anomalous.",
+        "source": "graph",
+        "ref": "query:region_history(card_id=C12382-K1)",
+        "entity_ids": [
+          "C12382-K1",
+          "REGION-444.0"
+        ]
+      },
+      {
+        "claim": "The model score was treated as an alerting input rather than a fraud verdict, as required by Fraud Policy section 0.",
+        "source": "document",
+        "ref": "Fraud Policy section 0",
+        "entity_ids": [
+          "3514030"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-3587",
+      "CC-1066",
+      "CC-2964"
+    ],
+    "summary": "The alert is assessed as legitimate with fraud probability 0.10. The flagged amount and channel match 4 earlier transactions within 45 days, supporting a recurring-payment explanation. The case closes without blocking the card.",
+    "written_to_graph": false,
+    "graph_case_id": ""
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "Policy section 6: multiple independent baseline checks place fraud probability at or below 0.15."
+      }
+    ],
+    "final": [
+      {
+        "action": "CLOSE_NO_FRAUD",
+        "route": "auto",
+        "reason": "Policy section 6: multiple independent baseline checks place fraud probability at or below 0.15."
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": false,
+    "reason": "Policy 3a: the episode does not cross the reporting threshold and no confirmed shared-origin fraud requires filing.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "Independent amount, region, velocity, and device-baseline checks place fraud probability at or below the stopping threshold.",
+  "tool_calls": 8,
+  "tokens": 0,
+  "latency_s": 0.0
+}

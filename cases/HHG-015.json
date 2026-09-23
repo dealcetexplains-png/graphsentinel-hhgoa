@@ -1,0 +1,97 @@
+{
+  "case_id": "HHG-015",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.92,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3464869"
+    ],
+    "first_suspicious_txn_id": "3464869",
+    "connected_card_ids": [],
+    "connected_device_profiles": [
+      "Trident/7.0 | Windows 8.1 | ie 11.0 for desktop | 1680x1050"
+    ],
+    "exposure_usd": 599.94,
+    "evidence": [
+      {
+        "claim": "The flagged online transaction is 6.0x the card's prior median amount and carries model risk 0.77.",
+        "source": "graph",
+        "ref": "query:card_baseline(card_id=C03042-K1)",
+        "entity_ids": [
+          "3464869",
+          "C03042-K1"
+        ]
+      },
+      {
+        "claim": "The transaction came from device profile DVC-22E67EB954, marked New for the account.",
+        "source": "graph",
+        "ref": "query:device_context(device_id=DVC-22E67EB954)",
+        "entity_ids": [
+          "3464869",
+          "DVC-22E67EB954"
+        ]
+      },
+      {
+        "claim": "Resolved-case memory contains closely matched investigations: CC-0615 (confirmed_fraud, card_not_present_new_device), CC-3886 (confirmed_fraud, card_not_present_new_device), CC-1313 (cleared, none).",
+        "source": "graph",
+        "ref": "query:similar_resolved_cases(case_id=HHG-015)",
+        "entity_ids": [
+          "CC-0615",
+          "CC-3886",
+          "CC-1313"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-0615",
+      "CC-3886",
+      "CC-1313"
+    ],
+    "summary": "The investigation identifies card not present new device with probability 0.92. 1 transaction(s) totaling $599.94 form the episode. The recommendation follows R2 and pattern evidence: block and reissue; exposure is $599.94.",
+    "written_to_graph": false,
+    "graph_case_id": ""
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2 and pattern evidence: block and reissue; exposure is $599.94."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 and policy 3a: retain the fraud investigation and evidence."
+      }
+    ],
+    "final": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2 and pattern evidence: block and reissue; exposure is $599.94."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 and policy 3a: retain the fraud investigation and evidence."
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": false,
+    "reason": "Policy 3a: the episode does not cross the reporting threshold and no confirmed shared-origin fraud requires filing.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0,
+    "activity_dates": []
+  },
+  "stop_reason": "The fraud episode, affected transactions, and required policy actions are identified with at least two independent evidence sources; further investigation is unlikely to change the decision.",
+  "tool_calls": 8,
+  "tokens": 0,
+  "latency_s": 0.0
+}

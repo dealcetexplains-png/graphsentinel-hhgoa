@@ -1,0 +1,128 @@
+{
+  "case_id": "HHG-006",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.99,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3476602",
+      "3476633",
+      "3476665",
+      "3476682"
+    ],
+    "first_suspicious_txn_id": "3476602",
+    "connected_card_ids": [],
+    "connected_device_profiles": [
+      "Trident/7.0 | Windows 7 | ie 11.0 for desktop | 1920x1080"
+    ],
+    "exposure_usd": 1906.07,
+    "evidence": [
+      {
+        "claim": "4 related transactions totaling $1,906.07 occurred from 2016-11-21 20:00 to 2016-11-21 20:30.",
+        "source": "graph",
+        "ref": "query:episode_window(case_id=HHG-006)",
+        "entity_ids": [
+          "3476602",
+          "3476633",
+          "3476665",
+          "3476682"
+        ]
+      },
+      {
+        "claim": "The transaction came from device profile DVC-8029C6895E, marked New for the account.",
+        "source": "graph",
+        "ref": "query:device_context(device_id=DVC-8029C6895E)",
+        "entity_ids": [
+          "3476682",
+          "DVC-8029C6895E"
+        ]
+      },
+      {
+        "claim": "Resolved-case memory contains closely matched investigations: CC-0781 (confirmed_fraud, card_not_present_new_device), CC-3368 (confirmed_fraud, card_not_present_new_device), CC-5111 (confirmed_fraud, card_not_present_new_device).",
+        "source": "graph",
+        "ref": "query:similar_resolved_cases(case_id=HHG-006)",
+        "entity_ids": [
+          "CC-0781",
+          "CC-3368",
+          "CC-5111"
+        ]
+      },
+      {
+        "claim": "The customer reported that they did not make the flagged transaction.",
+        "source": "customer",
+        "ref": "case_pack.trigger_text",
+        "entity_ids": [
+          "C07297",
+          "3476682"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-0781",
+      "CC-3368",
+      "CC-5111"
+    ],
+    "summary": "The investigation identifies card not present new device with probability 0.99. 4 transaction(s) totaling $1,906.07 form the episode. The recommendation follows R2 and pattern evidence: block and reissue; exposure is $1,906.07.",
+    "written_to_graph": false,
+    "graph_case_id": ""
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2 and pattern evidence: block and reissue; exposure is $1,906.07."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 and policy 3a: retain the fraud investigation and evidence."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "R2/R6 and policy 3a: exposure exceeds $1,000 or the activity has a shared-device connection."
+      }
+    ],
+    "final": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "R2 and pattern evidence: block and reissue; exposure is $1,906.07."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R2 and policy 3a: retain the fraud investigation and evidence."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "R2/R6 and policy 3a: exposure exceeds $1,000 or the activity has a shared-device connection."
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": true,
+    "reason": "Policy 3a and R6/R9: strongly suspected fraud exceeds the reporting threshold or connects to coordinated activity across customers.",
+    "narrative": "Customer C07297 and card C07297-K1 were investigated after customer report identified transaction 3476682 on 2016-11-21. The investigation identified 4 related transaction(s) totaling $1,906.07 from 2016-11-21 through 2016-11-21. The activity occurred through the online channel under product code C with billing region 264.0. Device profile DVC-8029C6895E was New for the account and used no recorded proxy classification. Graph traversal connected the activity to 0 mapped card(s) beyond the subject card: none. The observed behavior is assessed as card not present new device with fraud probability 0.99, supported by transaction, device, customer, and resolved-case evidence. The bank recommends the actions recorded in the associated case, including human approval for any card block or regulatory filing.",
+    "subjects": [
+      "C07297",
+      "C07297-K1",
+      "DVC-8029C6895E"
+    ],
+    "total_amount_usd": 1906.07,
+    "activity_dates": [
+      "2016-11-21",
+      "2016-11-21"
+    ]
+  },
+  "stop_reason": "The fraud episode, affected transactions, and required policy actions are identified with at least two independent evidence sources; further investigation is unlikely to change the decision.",
+  "tool_calls": 9,
+  "tokens": 0,
+  "latency_s": 0.0
+}

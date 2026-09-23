@@ -1,0 +1,162 @@
+{
+  "case_id": "HHG-019",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.96,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3497738",
+      "3503878",
+      "3503988",
+      "3513574",
+      "3513647"
+    ],
+    "first_suspicious_txn_id": "3497738",
+    "connected_card_ids": [
+      "C01104-K2",
+      "C01983-K1",
+      "C06224-K2",
+      "C11309-K1"
+    ],
+    "connected_device_profiles": [
+      "Windows | other | chrome 61.0 | 1280x720"
+    ],
+    "exposure_usd": 500.0,
+    "evidence": [
+      {
+        "claim": "5 related transactions totaling $500.00 occurred from 2016-11-29 17:45 to 2016-12-04 18:03.",
+        "source": "graph",
+        "ref": "query:episode_window(case_id=HHG-019)",
+        "entity_ids": [
+          "3497738",
+          "3503878",
+          "3503988",
+          "3513574",
+          "3513647"
+        ]
+      },
+      {
+        "claim": "The transaction came from device profile DVC-2A348F201B, marked New for the account.",
+        "source": "graph",
+        "ref": "query:device_context(device_id=DVC-2A348F201B)",
+        "entity_ids": [
+          "3503878",
+          "DVC-2A348F201B"
+        ]
+      },
+      {
+        "claim": "The same device profile links the episode to 4 other customer(s), including C01104, C01983, C06224, C11309.",
+        "source": "graph",
+        "ref": "query:device_neighbors(device_id=DVC-2A348F201B)",
+        "entity_ids": [
+          "DVC-2A348F201B",
+          "C01104",
+          "C01983",
+          "C06224",
+          "C11309"
+        ]
+      },
+      {
+        "claim": "Resolved-case memory contains closely matched investigations: CC-2860 (confirmed_fraud, card_not_present_fraud), CC-5026 (confirmed_fraud, out_of_region_use), CC-2011 (confirmed_fraud, out_of_region_use).",
+        "source": "graph",
+        "ref": "query:similar_resolved_cases(case_id=HHG-019)",
+        "entity_ids": [
+          "CC-2860",
+          "CC-5026",
+          "CC-2011"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2860",
+      "CC-5026",
+      "CC-2011"
+    ],
+    "summary": "The investigation identifies card not present new device with probability 0.96. 5 transaction(s) totaling $500.00 form the episode. The device graph connects 4 additional mapped card(s). The recommendation follows R6: the new device links several near-identical transactions across cards.",
+    "written_to_graph": false,
+    "graph_case_id": ""
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "DECLINE_TRANSACTION",
+        "route": "L1",
+        "reason": "R6: the new device links several near-identical transactions across cards."
+      },
+      {
+        "action": "STEP_UP_AUTH",
+        "route": "auto",
+        "reason": "R1: require confirmation before further activity."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R6: shared-origin fraud evidence requires a case."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "R6 and policy 3a: the activity connects multiple customers through a shared device."
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "R6: protect the other mapped cards sharing the profile."
+      }
+    ],
+    "final": [
+      {
+        "action": "DECLINE_TRANSACTION",
+        "route": "L1",
+        "reason": "R6: the new device links several near-identical transactions across cards."
+      },
+      {
+        "action": "STEP_UP_AUTH",
+        "route": "auto",
+        "reason": "R1: require confirmation before further activity."
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "R6: shared-origin fraud evidence requires a case."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "R6 and policy 3a: the activity connects multiple customers through a shared device."
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "R6: protect the other mapped cards sharing the profile."
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": true,
+    "reason": "Policy 3a and R6/R9: strongly suspected fraud exceeds the reporting threshold or connects to coordinated activity across customers.",
+    "narrative": "Customer C07987 and card C07987-K2 were investigated after risk score identified transaction 3503878 on 2016-12-01. The investigation identified 5 related transaction(s) totaling $500.00 from 2016-11-29 through 2016-12-04. The activity occurred through the online channel under product code R with billing region 264.0. Device profile DVC-2A348F201B was New for the account and used no recorded proxy classification. Graph traversal connected the activity to 4 mapped card(s) beyond the subject card: C01104-K2, C01983-K1, C06224-K2, C11309-K1. The observed behavior is assessed as card not present new device with fraud probability 0.96, supported by transaction, device, customer, and resolved-case evidence. The bank recommends the actions recorded in the associated case, including human approval for any card block or regulatory filing.",
+    "subjects": [
+      "C07987",
+      "C07987-K2",
+      "C01104-K2",
+      "C01983-K1",
+      "C06224-K2",
+      "C11309-K1",
+      "DVC-2A348F201B"
+    ],
+    "total_amount_usd": 500.0,
+    "activity_dates": [
+      "2016-11-29",
+      "2016-12-04"
+    ]
+  },
+  "stop_reason": "The fraud episode, affected transactions, and required policy actions are identified with at least two independent evidence sources; further investigation is unlikely to change the decision.",
+  "tool_calls": 9,
+  "tokens": 0,
+  "latency_s": 0.0
+}
